@@ -2,6 +2,8 @@ import 'dart:async';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:sellers_app/authScreens/auth_screen.dart';
+import 'package:sellers_app/brandsScreens/home_screen.dart';
 
 class MySplashScreen extends StatefulWidget {
   const MySplashScreen({Key? key}) : super(key: key);
@@ -17,12 +19,12 @@ class _MySplashScreenState extends State<MySplashScreen> {
       (() async {
         if (FirebaseAuth.instance.currentUser != null) {
           // the user is already logged in
-          //  Navigator.push(context,
-          //    MaterialPageRoute(builder: (context) => const HomeScreen()));
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => const HomeScreen()));
         } else {
           // No user is logged in
-          //   Navigator.push(context,
-          //     MaterialPageRoute(builder: (context) => const AuhScreen()));
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => const AuhScreen()));
         }
       }),
     );
