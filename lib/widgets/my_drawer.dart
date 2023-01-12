@@ -1,9 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import "package:flutter/material.dart";
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:trial/authScreens/login_tab_page.dart';
-import 'package:trial/global/global.dart';
-import 'package:trial/splashScreen/my_splash_screen.dart';
+import 'package:sellers_app/global/global.dart';
+import 'package:sellers_app/splashScreen/my_splash_screen.dart';
 
 class MyDrawer extends StatefulWidget {
   const MyDrawer({Key? key}) : super(key: key);
