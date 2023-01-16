@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
@@ -32,12 +31,15 @@ class _UploadBrandsScreenState extends State<UploadBrandsScreen> {
   getImageFromGallery() async {
     Navigator.of(context).pop();
     imgXFile = await imagePicker.pickImage(source: ImageSource.gallery);
+    if (dev) print("WE WE WE WE WE get Image From Gallery");
+
     setState(() {
       imgXFile;
     });
   }
 
   captureImageFromCamera() async {
+    if (dev) print("WE WE WE WE WE IMage Captured");
     Navigator.of(context).pop();
     imgXFile = await imagePicker.pickImage(source: ImageSource.camera);
     setState(() {
@@ -45,7 +47,7 @@ class _UploadBrandsScreenState extends State<UploadBrandsScreen> {
     });
   }
 
-  saveBrandInfoToFireStoreDB() async* {
+  saveBrandInfoToFireStoreDB(){
     FirebaseFirestore.instance
         .collection("sellers")
         .doc(sharedPreferences!.getString("uid"))
@@ -65,6 +67,7 @@ class _UploadBrandsScreenState extends State<UploadBrandsScreen> {
       uploading = false;
       brandUniqueId = DateTime.now().millisecondsSinceEpoch.toString();
     });
+    if (dev) print("WE WE WE WE WE save Brand Info To FireStore DB");
     Navigator.push(
         context, MaterialPageRoute(builder: (c) => const HomeScreen()));
   }
@@ -78,20 +81,26 @@ class _UploadBrandsScreenState extends State<UploadBrandsScreen> {
           uploading = true;
         });
         //1 start upload of image n download imageUrl
+        if (dev) print(" WE WE WE WE getting the url");
         String filename = DateTime.now().microsecondsSinceEpoch.toString();
+         if (dev) print(" WE WE WE WE getting the filenme");
         fStorage.Reference storageRef = fStorage.FirebaseStorage.instance
             .ref()
             .child("sellersBrandsImages")
             .child(filename);
+             if (dev) print(" WE WE WE WE creating storageRef");
         fStorage.UploadTask uploadImageTask =
             storageRef.putFile(File(imgXFile!.path));
+             if (dev) print(" WE WE WE WE uploadtask");
         fStorage.TaskSnapshot taskSnapshot =
-            await uploadImageTask.whenComplete(() => null);
+            await uploadImageTask.whenComplete(() {
+          if (dev) print(" WE WE WE WE finish taskSnapshot");
+        });
         await taskSnapshot.ref.getDownloadURL().then((urlImage) {
           downloadUrlImage = urlImage;
+          if (dev) print(" WE WE WE WE gotten the url $downloadUrlImage");
         });
-        if (dev) print("saving to db");
-
+        if (dev) print(" WE WE WE WE going tto firetore");
         //2 save brand info to firestore
         saveBrandInfoToFireStoreDB();
         //3 store the brand locally
@@ -101,6 +110,7 @@ class _UploadBrandsScreenState extends State<UploadBrandsScreen> {
         await sharedPreferences!
             .setString("brandTitle", brandTitleController!.text.trim());
         await sharedPreferences!.setString("ThumbnailUrl", downloadUrlImage);
+        if (dev) print("WE WE WE WE WE save to Device");
       } else if (brandInfoController!.text.isEmpty &&
           brandTitleController!.text.isEmpty) {
         //form is empty
@@ -149,10 +159,11 @@ class _UploadBrandsScreenState extends State<UploadBrandsScreen> {
         centerTitle: true,
       ),
       body: ListView(children: [
-        uploading == true ? linearProgressIndicator() : Container(),
+        uploading == true ? linearProgressIndicator() : Container()
+       
 
         //image
-        SizedBox(
+        ,SizedBox(
           height: 220,
           width: MediaQuery.of(context).size.width * 0.8,
           child: Container(
