@@ -30,7 +30,7 @@ class _SignupTaPageState extends State<SignupTaPage> {
   final ImagePicker imagePicker = ImagePicker();
   bool dev = true;
 
-  getImageFromGallry() async {
+  getImageFromGallery() async {
     imgXFile = await imagePicker.pickImage(source: ImageSource.gallery);
     setState(() {
       imgXFile;
@@ -147,7 +147,7 @@ class _SignupTaPageState extends State<SignupTaPage> {
           // get pix
           GestureDetector(
             onTap: (() {
-              getImageFromGallry();
+              getImageFromGallery();
             }),
             child: CircleAvatar(
               backgroundColor: Theme.of(context).primaryColor,
