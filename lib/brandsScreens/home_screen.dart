@@ -1,6 +1,13 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import "package:flutter/material.dart";
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:sellers_app/Models/brands_model.dart';
+import 'package:sellers_app/brandsScreens/brands_ui_design_widget.dart';
 import 'package:sellers_app/brandsScreens/upload_brands_screen.dart';
+import 'package:sellers_app/global/global.dart';
 import 'package:sellers_app/widgets/my_drawer.dart';
+import 'package:sellers_app/widgets/text_delegate_header_widget.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -48,8 +55,46 @@ class _HomeScreenState extends State<HomeScreen> {
               ))
         ],
       ),
-      body: const CircleAvatar(
-        radius: 65,
+      body: CustomScrollView(
+        slivers: <Widget>[
+          SliverPersistentHeader(
+            pinned: true,
+            delegate: TextDelegateHeaderWidget(title: "My Brands"),
+          ),
+          StreamBuilder(
+            builder: (context, AsyncSnapshot dataSnapShot) {
+              if (dataSnapShot.hasData) {
+//if there are brands
+                return SliverStaggeredGrid.countBuilder(
+                    crossAxisCount: 1,
+                    staggeredTileBuilder: (c) => const StaggeredTile.fit(1),
+                    itemBuilder: ((context, index) {
+                      Brands brandsModel = Brands.fromJson(
+                          dataSnapShot.data.docs[index].data()
+                              as Map<String, dynamic>);
+                      return BrandsUIDesignWidget(
+                        context: context,
+                        model: brandsModel,
+                      );
+                    }),
+                    itemCount: dataSnapShot.data.docs.length);
+              } else {
+                //if there are no brands
+                return const SliverToBoxAdapter(
+                    child: Text(
+                  'No Brands Added',
+                  textAlign: TextAlign.center,
+                ));
+              }
+            },
+            stream: FirebaseFirestore.instance
+                .collection("sellers")
+                .doc(sharedPreferences!.getString("uid"))
+                .collection("brands")
+                .orderBy("publishedDate", descending: true)
+                .snapshots(),
+          ),
+        ],
       ),
     );
   }

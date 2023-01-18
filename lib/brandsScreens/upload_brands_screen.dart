@@ -25,7 +25,6 @@ class _UploadBrandsScreenState extends State<UploadBrandsScreen> {
   TextEditingController? brandTitleController = TextEditingController();
   bool uploading = false;
   String downloadUrlImage = "";
-  bool dev = false;
   String brandUniqueId = DateTime.now().millisecondsSinceEpoch.toString();
 
   getImageFromGallery() async {
@@ -47,7 +46,7 @@ class _UploadBrandsScreenState extends State<UploadBrandsScreen> {
     });
   }
 
-  saveBrandInfoToFireStoreDB(){
+  saveBrandInfoToFireStoreDB() {
     FirebaseFirestore.instance
         .collection("sellers")
         .doc(sharedPreferences!.getString("uid"))
@@ -83,15 +82,15 @@ class _UploadBrandsScreenState extends State<UploadBrandsScreen> {
         //1 start upload of image n download imageUrl
         if (dev) print(" WE WE WE WE getting the url");
         String filename = DateTime.now().microsecondsSinceEpoch.toString();
-         if (dev) print(" WE WE WE WE getting the filenme");
+        if (dev) print(" WE WE WE WE getting the filenme");
         fStorage.Reference storageRef = fStorage.FirebaseStorage.instance
             .ref()
             .child("sellersBrandsImages")
             .child(filename);
-             if (dev) print(" WE WE WE WE creating storageRef");
+        if (dev) print(" WE WE WE WE creating storageRef");
         fStorage.UploadTask uploadImageTask =
             storageRef.putFile(File(imgXFile!.path));
-             if (dev) print(" WE WE WE WE uploadtask");
+        if (dev) print(" WE WE WE WE uploadtask");
         fStorage.TaskSnapshot taskSnapshot =
             await uploadImageTask.whenComplete(() {
           if (dev) print(" WE WE WE WE finish taskSnapshot");
@@ -160,10 +159,10 @@ class _UploadBrandsScreenState extends State<UploadBrandsScreen> {
       ),
       body: ListView(children: [
         uploading == true ? linearProgressIndicator() : Container()
-       
 
         //image
-        ,SizedBox(
+        ,
+        SizedBox(
           height: 220,
           width: MediaQuery.of(context).size.width * 0.8,
           child: Container(
