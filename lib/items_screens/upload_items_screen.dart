@@ -1,9 +1,9 @@
 import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:sellers_app/Models/brands_model.dart';
 import 'package:sellers_app/brandsScreens/home_screen.dart';
 import 'package:sellers_app/global/global.dart';
 import 'package:sellers_app/splashScreen/my_splash_screen.dart';
@@ -11,21 +11,23 @@ import 'package:sellers_app/widgets/progress_bar.dart';
 import 'package:firebase_storage/firebase_storage.dart' as fStorage;
 import 'package:shared_preferences/shared_preferences.dart';
 
-class UploadBrandsScreen extends StatefulWidget {
-  UploadBrandsScreen({Key? key}) : super(key: key);
-
+class UploadItemsScreen extends StatefulWidget {
+  UploadItemsScreen(this.model);
+  Brands? model;
   @override
-  State<UploadBrandsScreen> createState() => _UploadBrandsScreenState();
+  State<UploadItemsScreen> createState() => _UploadItemsScreenState();
 }
 
-class _UploadBrandsScreenState extends State<UploadBrandsScreen> {
+class _UploadItemsScreenState extends State<UploadItemsScreen> {
   XFile? imgXFile;
   final ImagePicker imagePicker = ImagePicker();
-  TextEditingController? brandInfoController = TextEditingController();
-  TextEditingController? brandTitleController = TextEditingController();
+  TextEditingController? itemInfoController = TextEditingController();
+  TextEditingController? itemTitleController = TextEditingController();
+  TextEditingController? itemPriceController = TextEditingController();
+  TextEditingController? itemDescriptionController = TextEditingController();
   bool uploading = false;
   String downloadUrlImage = "";
-  String brandUniqueId = DateTime.now().millisecondsSinceEpoch.toString();
+  String itemUniqueId = DateTime.now().millisecondsSinceEpoch.toString();
 
   getImageFromGallery() async {
     Navigator.of(context).pop();
@@ -46,36 +48,57 @@ class _UploadBrandsScreenState extends State<UploadBrandsScreen> {
     });
   }
 
-  saveBrandInfoToFireStoreDB() {
+  saveItemInfoToFireStoreDB() {
     FirebaseFirestore.instance
         .collection("sellers")
         .doc(sharedPreferences!.getString("uid"))
         .collection("brands")
-        .doc(brandUniqueId)
+        .doc(widget.model!.brandID)
+        .collection("items")
+        .doc(itemUniqueId)
         .set({
-      "brandID": brandUniqueId,
+      "itemID": itemUniqueId,
+      "brandID": widget.model!.brandID,
+      "sellerName": sharedPreferences!.getString("name"),
       "sellerUID": sharedPreferences!.getString("uid"),
-      "brandTitle": brandTitleController!.text.trim(),
-      "brandInfo": brandInfoController!.text.trim(),
+      "itemTitle": itemTitleController!.text.trim(),
+      "itemInfo": itemInfoController!.text,
+      "price": itemPriceController!.text,
+      "longDescription": itemDescriptionController!.text,
       "publishedDate": DateTime.now(),
       "status": "available",
       "thumbnailUrl": downloadUrlImage,
+    }).then((value) {
+      FirebaseFirestore.instance.collection("items").doc(itemUniqueId).set({
+        "itemID": itemUniqueId,
+        "brandID": widget.model!.brandID,
+        "sellerName": sharedPreferences!.getString("name"),
+        "sellerUID": sharedPreferences!.getString("uid"),
+        "itemTitle": itemTitleController!.text.trim(),
+        "itemInfo": itemInfoController!.text,
+        "price": itemPriceController!.text,
+        "longDescription": itemDescriptionController!.text,
+        "publishedDate": DateTime.now(),
+        "status": "available",
+        "thumbnailUrl": downloadUrlImage,
+      });
     });
 
     setState(() {
       uploading = false;
-      brandUniqueId = DateTime.now().millisecondsSinceEpoch.toString();
     });
     if (dev) print("WE WE WE WE WE save Brand Info To FireStore DB");
     Navigator.push(
         context, MaterialPageRoute(builder: (c) => const HomeScreen()));
   }
 
-  validateUploadform() async {
+  validateItemUploadform() async {
     //image has been seleted
     if (imgXFile != null) {
-      if (brandInfoController!.text.isNotEmpty &&
-          brandTitleController!.text.isNotEmpty) {
+      if (itemInfoController!.text.isNotEmpty &&
+          itemTitleController!.text.isNotEmpty &&
+          itemPriceController!.text.isNotEmpty &&
+          itemDescriptionController!.text.isNotEmpty) {
         setState(() {
           uploading = true;
         });
@@ -85,7 +108,7 @@ class _UploadBrandsScreenState extends State<UploadBrandsScreen> {
         if (dev) print(" WE WE WE WE getting the filenme");
         fStorage.Reference storageRef = fStorage.FirebaseStorage.instance
             .ref()
-            .child("sellersBrandsImages")
+            .child("sellersItemImages")
             .child(filename);
         if (dev) print(" WE WE WE WE creating storageRef");
         fStorage.UploadTask uploadImageTask =
@@ -99,31 +122,39 @@ class _UploadBrandsScreenState extends State<UploadBrandsScreen> {
           downloadUrlImage = urlImage;
           if (dev) print(" WE WE WE WE gotten the url $downloadUrlImage");
         });
-        if (dev) print(" WE WE WE WE going to firestore");
-        //2 save brand info to firestore
-        saveBrandInfoToFireStoreDB();
-        //3 store the brand locally
+        if (dev) print(" WE WE WE WE going to firetore");
+        //2 save item info to firestore
+        saveItemInfoToFireStoreDB();
+        //3 store the item locally
         sharedPreferences = await SharedPreferences.getInstance();
         await sharedPreferences!
-            .setString("brandInfo", brandInfoController!.text.trim());
+            .setString("itemInfo", itemInfoController!.text.trim());
         await sharedPreferences!
-            .setString("brandTitle", brandTitleController!.text.trim());
+            .setString("itemTitle", itemTitleController!.text.trim());
         await sharedPreferences!.setString("thumbnailUrl", downloadUrlImage);
         if (dev) print("WE WE WE WE WE save to Device");
-      } else if (brandInfoController!.text.isEmpty &&
-          brandTitleController!.text.isEmpty) {
-        //form is empty
-        Fluttertoast.showToast(msg: "Pls enter Brand Title & Information");
-      } else if (brandInfoController!.text.isEmpty) {
-        //only brand title supplied
-        Fluttertoast.showToast(msg: "Pls inter a Brand Information");
       } else {
-        //only brand info supplied
-        Fluttertoast.showToast(msg: "Pls inter a Brand Title");
+        //form is not completely filled
+        Fluttertoast.showToast(msg: "Pls fill form");
       }
     } else {
-      Fluttertoast.showToast(msg: "plsese Select a Pix");
+      Fluttertoast.showToast(msg: "please Select a Pix");
     }
+  }
+
+  BoxDecoration boxDecorationForAddingItem() {
+    return const BoxDecoration(
+      gradient: LinearGradient(
+        colors: [
+          Colors.pinkAccent,
+          Colors.purpleAccent,
+        ],
+        begin: FractionalOffset(0.0, 0.0),
+        end: FractionalOffset(1, 0),
+        stops: [0, 0],
+        tileMode: TileMode.clamp,
+      ),
+    );
   }
 
   uploadFormScreen() {
@@ -135,7 +166,7 @@ class _UploadBrandsScreenState extends State<UploadBrandsScreen> {
             child: IconButton(
                 onPressed: () {
                   //validate the form
-                  uploading == true ? null : validateUploadform();
+                  uploading == true ? null : validateItemUploadform();
                 },
                 icon: const Icon(Icons.cloud_upload)),
           )
@@ -152,9 +183,9 @@ class _UploadBrandsScreenState extends State<UploadBrandsScreen> {
           },
         ),
         flexibleSpace: Container(
-          decoration: boxDecorationForAddingBrand(),
+          decoration: boxDecorationForAddingItem(),
         ),
-        title: const Text("Upload New Brand"),
+        title: const Text("Upload New Item"),
         centerTitle: true,
       ),
       body: ListView(children: [
@@ -187,9 +218,9 @@ class _UploadBrandsScreenState extends State<UploadBrandsScreen> {
           title: SizedBox(
             width: 250,
             child: TextField(
-              controller: brandTitleController,
+              controller: itemTitleController,
               decoration: const InputDecoration(
-                  hintText: "Brand Title",
+                  hintText: "Item Title",
                   hintStyle: TextStyle(color: Colors.grey),
                   border: InputBorder.none),
             ),
@@ -207,9 +238,49 @@ class _UploadBrandsScreenState extends State<UploadBrandsScreen> {
           title: SizedBox(
             width: 250,
             child: TextField(
-              controller: brandInfoController,
+              controller: itemInfoController,
               decoration: const InputDecoration(
-                  hintText: "brand Info",
+                  hintText: "Item Info",
+                  hintStyle: TextStyle(color: Colors.grey),
+                  border: InputBorder.none),
+            ),
+          ),
+        ),
+        const Divider(
+          color: Colors.pinkAccent,
+          thickness: 1,
+        ),
+        ListTile(
+          leading: const Icon(
+            Icons.camera,
+            color: Colors.purple,
+          ),
+          title: SizedBox(
+            width: 250,
+            child: TextField(
+              controller: itemPriceController,
+              decoration: const InputDecoration(
+                  hintText: "Item Price",
+                  hintStyle: TextStyle(color: Colors.grey),
+                  border: InputBorder.none),
+            ),
+          ),
+        ),
+        const Divider(
+          color: Colors.pinkAccent,
+          thickness: 1,
+        ),
+        ListTile(
+          leading: const Icon(
+            Icons.description,
+            color: Colors.purple,
+          ),
+          title: SizedBox(
+            width: 250,
+            child: TextField(
+              controller: itemDescriptionController,
+              decoration: const InputDecoration(
+                  hintText: "Item Description",
                   hintStyle: TextStyle(color: Colors.grey),
                   border: InputBorder.none),
             ),
@@ -223,20 +294,20 @@ class _UploadBrandsScreenState extends State<UploadBrandsScreen> {
     return Scaffold(
       appBar: AppBar(
         flexibleSpace: Container(
-          decoration: boxDecorationForAddingBrand(),
+          decoration: boxDecorationForAddingItem(),
         ),
-        title: const Text("Add New Brand"),
+        title: const Text("Add New Item"),
         centerTitle: true,
       ),
       body: Container(
-        decoration: boxDecorationForAddingBrand(),
+        decoration: boxDecorationForAddingItem(),
         child: Center(
           child: Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 const Icon(
-                  Icons.add_photo_alternate_outlined,
+                  Icons.add_photo_alternate,
                   color: Colors.white,
                   size: 200,
                 ),
@@ -250,7 +321,7 @@ class _UploadBrandsScreenState extends State<UploadBrandsScreen> {
                       borderRadius: BorderRadius.circular(30),
                     ),
                   ),
-                  child: const Text("Add New Brand"),
+                  child: const Text("Add New Item"),
                 ),
               ],
             ),
@@ -266,7 +337,7 @@ class _UploadBrandsScreenState extends State<UploadBrandsScreen> {
         builder: (c) {
           return SimpleDialog(
             title: const Text(
-              "Brand Image",
+              "Item Image",
               textAlign: TextAlign.center,
               style: TextStyle(
                 color: Colors.deepPurple,
@@ -303,21 +374,6 @@ class _UploadBrandsScreenState extends State<UploadBrandsScreen> {
             ],
           );
         });
-  }
-
-  BoxDecoration boxDecorationForAddingBrand() {
-    return const BoxDecoration(
-      gradient: LinearGradient(
-        colors: [
-          Colors.pinkAccent,
-          Colors.purpleAccent,
-        ],
-        begin: FractionalOffset(0.0, 0.0),
-        end: FractionalOffset(1, 0),
-        stops: [0, 0],
-        tileMode: TileMode.clamp,
-      ),
-    );
   }
 
   @override
