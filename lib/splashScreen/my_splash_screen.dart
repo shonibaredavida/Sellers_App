@@ -18,13 +18,13 @@ class _MySplashScreenState extends State<MySplashScreen> {
       const Duration(seconds: 3),
       (() async {
         if (FirebaseAuth.instance.currentUser != null) {
-          // the user is already logged in
+          // the seller is already logged in
           Navigator.push(context,
               MaterialPageRoute(builder: (context) => const HomeScreen()));
         } else {
-          // No user is logged in
-          Navigator.push(context,
-              MaterialPageRoute(builder: (context) => const AuhScreen()));
+          // No seller is logged in
+          //   Navigator.push(context,
+          //     MaterialPageRoute(builder: (context) => const AuhScreen()));
         }
       }),
     );
