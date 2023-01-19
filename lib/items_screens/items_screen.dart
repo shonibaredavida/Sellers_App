@@ -1,5 +1,10 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:sellers_app/Models/brands_model.dart';
+import 'package:sellers_app/Models/items_models.dart';
+import 'package:sellers_app/global/global.dart';
+import 'package:sellers_app/items_screens/item_ui_design.dart';
 import 'package:sellers_app/items_screens/upload_items_screen.dart';
 import 'package:sellers_app/widgets/text_delegate_header_widget.dart';
 
@@ -56,6 +61,41 @@ class _ItemsScreenState extends State<ItemsScreen> {
             pinned: true,
             delegate: TextDelegateHeaderWidget(
                 title: "My ${widget.model!.brandTitle.toString()} Items"),
+          ),
+          StreamBuilder(
+            builder: (context, AsyncSnapshot dataSnapShot) {
+              if (dataSnapShot.hasData) {
+//if there are brands
+                return SliverStaggeredGrid.countBuilder(
+                    crossAxisCount: 1,
+                    staggeredTileBuilder: (c) => const StaggeredTile.fit(1),
+                    itemBuilder: ((context, index) {
+                      Items itemsModel = Items.fromJson(
+                          dataSnapShot.data.docs[index].data()
+                              as Map<String, dynamic>);
+                      return ItemsUIDesignWidget(
+                        context: context,
+                        model: itemsModel,
+                      );
+                    }),
+                    itemCount: dataSnapShot.data.docs.length);
+              } else {
+                //if there are no brands
+                return const SliverToBoxAdapter(
+                    child: Text(
+                  'No Items Added',
+                  textAlign: TextAlign.center,
+                ));
+              }
+            },
+            stream: FirebaseFirestore.instance
+                .collection("sellers")
+                .doc(sharedPreferences!.getString("uid"))
+                .collection("brands")
+                .doc(widget.model!.brandID)
+                .collection('items')
+                .orderBy("publishedDate", descending: true)
+                .snapshots(),
           ),
         ],
       ),
