@@ -21,8 +21,7 @@ class Brands {
     brandID = json['brandID'];
     brandInfo = json['brandInfo'];
     brandTitle = json['brandTitle'];
-    publishedDate;
-    json['publishedDate'];
+    publishedDate = json['publishedDate'];
     sellerUID = json['sellerUID'];
     thumbnailUrl = json['thumbnailUrl'];
     status = json['status'];

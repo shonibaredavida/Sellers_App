@@ -26,7 +26,7 @@ class _BrandsUIDesignWidgetState extends State<BrandsUIDesignWidget> {
         child: Padding(
           padding: const EdgeInsets.all(10),
           child: SizedBox(
-            // height: 70,
+            height: 270,
             width: MediaQuery.of(context).size.width,
             child: Column(children: [
               Image.network(
