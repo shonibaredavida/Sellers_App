@@ -17,18 +17,18 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        debugShowCheckedModeBanner: false,
-        title: 'iShop Sellers App',
-        theme: ThemeData(
-          primarySwatch: Colors.purple,
-        ),
-        home: const MySplashScreen());
+      debugShowCheckedModeBanner: false,
+      title: 'iShop Sellers App',
+      theme: ThemeData(
+        primarySwatch: Colors.purple,
+      ),
+      home: const MySplashScreen(),
+    );
   }
 }
 
 
 /*
 Shodavnotes
-add a dialog box to delete guestures
-delete descendant of deleted brands
+add a dialog box to delete guestures delete descendant of deleted brands
  */

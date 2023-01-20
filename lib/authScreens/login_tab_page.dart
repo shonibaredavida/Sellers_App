@@ -21,12 +21,17 @@ class _LoginTabPageState extends State<LoginTabPage> {
 
   validateForm() {
     if (emailController.text.isNotEmpty && passwordController.text.isNotEmpty) {
+      if (dev) print('WE WE WE WE initiating login ');
       loginnow();
     } else if (emailController.text.isEmpty) {
+      if (dev) print('WE WE WE WE form validation-- kindly enter mail ');
       Fluttertoast.showToast(msg: "Kindly enter your email");
     } else if (passwordController.text.isEmpty) {
+      if (dev) print('WE WE WE WE form validation-- kindly enter password ');
       Fluttertoast.showToast(msg: "KIindly enter your password");
     } else {
+      if (dev)
+        print('WE WE WE WE form validation-- kindly enter mail n password ');
       Fluttertoast.showToast(
           msg: "Kindly enter your email and password details");
     }
@@ -34,6 +39,10 @@ class _LoginTabPageState extends State<LoginTabPage> {
 
   loginnow() async {
     User? currentSeller;
+
+    if (dev)
+      print(
+          'WE WE WE WE form loginning--- Checking your credentials from firebse');
     showDialog(
         context: context,
         builder: (c) => const LoadingDialogWidget(
@@ -46,10 +55,14 @@ class _LoginTabPageState extends State<LoginTabPage> {
             password: passwordController.text.trim())
         .then((auth) => currentSeller = auth.user)
         .catchError((errorMessage) {
+      if (dev) print('WE WE WE WE Checking your credentials..error occured');
+
       Navigator.of(context).pop();
       Fluttertoast.showToast(msg: "Error occured \n $errorMessage");
     });
     if (currentSeller != null) {
+      if (dev) print('WE WE WE WE Checking your credentials.. found user');
+
       checkIfSellerRecordExist(currentSeller);
     }
   }
@@ -62,8 +75,12 @@ class _LoginTabPageState extends State<LoginTabPage> {
         .then((record) async {
       if (record.exists) {
         //Seller record exist
+        if (dev) print('WE WE WE WE Checking your credentials.. found record');
+
         if (record.data()!["status"] == "approved") {
           //Seller record is approved to login in
+          if (dev) print('WE WE WE WE approved user record saved to device');
+
           await sharedPreferences!.setString("uid", record.data()!["uid"]);
           await sharedPreferences!.setString("email", record.data()!["email"]);
           await sharedPreferences!.setString("name", record.data()!["name"]);
@@ -75,10 +92,15 @@ class _LoginTabPageState extends State<LoginTabPage> {
               .setDouble("earnings", record.data()!["earnings"]);
 
           //send the seller to home screen
+
+          if (dev) print('WE WE WE WE routing to MySplashScreen');
           Navigator.push(context,
               MaterialPageRoute(builder: (context) => const MySplashScreen()));
         } else {
           //seller have been BLOCKED by Admin \n contact amin@weshop.com
+          if (dev)
+            print('WE WE WE WE user is blocked..\n routing to authScreen');
+
           FirebaseAuth.instance.signOut();
           Navigator.of(context).pop();
           Fluttertoast.showToast(
@@ -86,6 +108,8 @@ class _LoginTabPageState extends State<LoginTabPage> {
         }
       } else {
         //seller record doesnt exist
+        if (dev)
+          print('WE WE WE WE  This Seller doesnt exist. routing to authScreen');
         FirebaseAuth.instance.signOut();
         Navigator.of(context).pop();
         Fluttertoast.showToast(msg: "This Seller doesnt exist, Pls Signup ");
@@ -127,6 +151,7 @@ class _LoginTabPageState extends State<LoginTabPage> {
                     const EdgeInsets.symmetric(vertical: 15, horizontal: 100),
               ),
               onPressed: () {
+                if (dev) print('WE WE WE WE initiating the form validation ');
                 validateForm();
               },
               child: const Text(

@@ -29,7 +29,7 @@ class _ItemsDetailsScreenState extends State<ItemsDetailsScreen> {
           .collection("items")
           .doc(widget.model!.itemID)
           .delete();
-      if (dev) print("Item deleted successfully");
+      if (dev) print(" WE WE WE WE  Item deleted successfully");
       Fluttertoast.showToast(msg: "Item Deleted Successfully");
       Navigator.of(context).push(
           MaterialPageRoute(builder: (context) => const MySplashScreen()));
@@ -58,7 +58,7 @@ class _ItemsDetailsScreenState extends State<ItemsDetailsScreen> {
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
-          if (dev) print("initialized Item deletion");
+          if (dev) print(" WE WE WE WE initialized Item deletion");
           deleteItem();
         },
         label: const Text("Delete this Item"),

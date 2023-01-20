@@ -39,6 +39,7 @@ class _SignupTaPageState extends State<SignupTaPage> {
 
   saveInfoToFireStoreAndLocally(User currentUser) async {
 // save to firestore
+
     FirebaseFirestore.instance.collection("sellers").doc(currentUser.uid).set({
       "uid": currentUser.uid,
       "email": currentUser.email,
@@ -49,17 +50,16 @@ class _SignupTaPageState extends State<SignupTaPage> {
       "earnings": 0.0,
       "status": "approved",
     });
-
+    if (dev) print("WE WE WE WE saving to firebase");
 // save locally
     sharedPreferences = await SharedPreferences.getInstance();
     await sharedPreferences!.setString("uid", currentUser.uid);
     await sharedPreferences!.setString("email", currentUser.email!);
     await sharedPreferences!.setString("name", namecontroller.text.trim());
     await sharedPreferences!.setString("photoUrl", downloadUrlImage);
-    /* await sharedPreferences!.setString("phone", phoneController.text.trim());
-    await sharedPreferences!.setString("address", locationController.text);
-    await sharedPreferences!.setDouble("earnings", 0.0); */
 
+    if (dev)
+      print("WE WE WE WE saving locally & redirecting to MySplashScreen");
 // route to home page
     Navigator.push(
         context, MaterialPageRoute(builder: (c) => MySplashScreen()));
@@ -67,18 +67,22 @@ class _SignupTaPageState extends State<SignupTaPage> {
 
   saveInformationToDatabase(email, password) async {
     //authenticating the user using firebase
+    if (dev) print("WE WE WE WE creating user");
+
     User? currentSeller;
     await FirebaseAuth.instance
         .createUserWithEmailAndPassword(email: email, password: password)
         .then((auth) {
       currentSeller = auth.user;
     }).catchError((errorMessage) {
+      if (dev) print("WE WE WE WE creating user-- error occured");
+
       Navigator.of(context).pop();
       Fluttertoast.showToast(msg: "Error Occured: \n $errorMessage");
     });
 
     if (currentSeller != null) {
-      if (dev) print("logged in `");
+      if (dev) print("WE WE WE WE logged in");
       //save the user information to Database n save locally
       saveInfoToFireStoreAndLocally(currentSeller!);
     }
@@ -87,7 +91,7 @@ class _SignupTaPageState extends State<SignupTaPage> {
   formValidation() async {
     if (imgXFile == null) // no image selected
     {
-      if (dev) print('SELECT pix');
+      if (dev) print('WE WE WE WE SELECT pix');
       Fluttertoast.showToast(msg: "Pls Select an Image");
     } else {
       if (emailController.text.isNotEmpty &&
@@ -96,9 +100,12 @@ class _SignupTaPageState extends State<SignupTaPage> {
           namecontroller.text.isNotEmpty &&
           confirmPasswordController.text.isNotEmpty &&
           passwordController.text.isNotEmpty) {
+        if (dev) print('WE WE WE WE form filled ');
         // email n name, password, confirmatio n given
         if (passwordController.text == confirmPasswordController.text) {
           //password n confirmation field are same
+          if (dev) print('WE WE WE WE password == confirmPassword');
+
           showDialog(
               context: context,
               builder: (c) {
@@ -119,7 +126,7 @@ class _SignupTaPageState extends State<SignupTaPage> {
           await taskSnapshot.ref.getDownloadURL().then((urlImage) {
             downloadUrlImage = urlImage;
           });
-          if (dev) print("saving to db");
+          if (dev) print(" WE WE WE WE linking to firebase");
 
           //2~  Upload user info to firebase
           saveInformationToDatabase(

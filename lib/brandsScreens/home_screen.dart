@@ -64,11 +64,16 @@ class _HomeScreenState extends State<HomeScreen> {
           StreamBuilder(
             builder: (context, AsyncSnapshot dataSnapShot) {
               if (dataSnapShot.hasData) {
+                if (dev) print("WE WE WE WE brands exist");
+
 //if there are brands
                 return SliverStaggeredGrid.countBuilder(
                     crossAxisCount: 1,
                     staggeredTileBuilder: (c) => const StaggeredTile.fit(1),
                     itemBuilder: ((context, index) {
+                      if (dev)
+                        print("WE WE WE WE Streaming the exisiting brands ");
+
                       Brands brandsModel = Brands.fromJson(
                           dataSnapShot.data.docs[index].data()
                               as Map<String, dynamic>);
@@ -79,6 +84,8 @@ class _HomeScreenState extends State<HomeScreen> {
                     }),
                     itemCount: dataSnapShot.data.docs.length);
               } else {
+                if (dev) print("WE WE WE WE No Brands Added' ");
+
                 //if there are no brands
                 return const SliverToBoxAdapter(
                     child: Text(
