@@ -23,8 +23,8 @@ class _MySplashScreenState extends State<MySplashScreen> {
               MaterialPageRoute(builder: (context) => const HomeScreen()));
         } else {
           // No seller is logged in
-          //   Navigator.push(context,
-          //     MaterialPageRoute(builder: (context) => const AuhScreen()));
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => const AuhScreen()));
         }
       }),
     );
