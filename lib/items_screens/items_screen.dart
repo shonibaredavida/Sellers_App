@@ -66,6 +66,8 @@ class _ItemsScreenState extends State<ItemsScreen> {
             builder: (context, AsyncSnapshot dataSnapShot) {
               if (dataSnapShot.hasData) {
 //if there are brands
+
+                if (dev) print("getting brands");
                 return SliverStaggeredGrid.countBuilder(
                     crossAxisCount: 1,
                     staggeredTileBuilder: (c) => const StaggeredTile.fit(1),
@@ -80,6 +82,7 @@ class _ItemsScreenState extends State<ItemsScreen> {
                     }),
                     itemCount: dataSnapShot.data.docs.length);
               } else {
+                if (dev) print("No brand available");
                 //if there are no brands
                 return const SliverToBoxAdapter(
                     child: Text(

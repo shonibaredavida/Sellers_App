@@ -49,6 +49,7 @@ class _UploadItemsScreenState extends State<UploadItemsScreen> {
   }
 
   saveItemInfoToFireStoreDB() {
+    if (dev) print("saving Item info to related brand collection");
     FirebaseFirestore.instance
         .collection("sellers")
         .doc(sharedPreferences!.getString("uid"))
@@ -69,6 +70,7 @@ class _UploadItemsScreenState extends State<UploadItemsScreen> {
       "status": "available",
       "thumbnailUrl": downloadUrlImage,
     }).then((value) {
+      if (dev) print("saving Item info to items collection");
       FirebaseFirestore.instance.collection("items").doc(itemUniqueId).set({
         "itemID": itemUniqueId,
         "brandID": widget.model!.brandID,
@@ -87,7 +89,7 @@ class _UploadItemsScreenState extends State<UploadItemsScreen> {
     setState(() {
       uploading = false;
     });
-    if (dev) print("WE WE WE WE WE save Brand Info To FireStore DB");
+    if (dev) print("WE WE WE WE WE save item Info To FireStore DB");
     Navigator.push(
         context, MaterialPageRoute(builder: (c) => const HomeScreen()));
   }

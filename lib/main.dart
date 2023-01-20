@@ -25,3 +25,10 @@ class MyApp extends StatelessWidget {
         home: const MySplashScreen());
   }
 }
+
+
+/*
+Shodavnotes
+add a dialog box to delete guestures
+delete descendant of deleted brands
+ */
