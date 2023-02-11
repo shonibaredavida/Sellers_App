@@ -7,9 +7,10 @@ import 'package:sellers_app/items_screens/items_screen.dart';
 import 'package:sellers_app/splashScreen/my_splash_screen.dart';
 
 class BrandsUIDesignWidget extends StatefulWidget {
-  Brands? model;
-  BuildContext? context;
-  BrandsUIDesignWidget({this.context, this.model});
+  final Brands? model;
+
+  final BuildContext? context;
+  const BrandsUIDesignWidget({super.key, this.context, this.model});
   @override
   State<BrandsUIDesignWidget> createState() => _BrandsUIDesignWidgetState();
 }

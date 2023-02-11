@@ -34,7 +34,7 @@ class _MyDrawerState extends State<MyDrawer> {
                         NetworkImage(sharedPreferences!.getString("photoUrl")!),
                   ),
                 ),
-                SizedBox(height: 12),
+                sizedBox(height: 12),
                 Text(
                   sharedPreferences!.getString("name")!,
                   style: const TextStyle(
@@ -42,7 +42,7 @@ class _MyDrawerState extends State<MyDrawer> {
                       fontSize: 20,
                       fontWeight: FontWeight.bold),
                 ),
-                SizedBox(height: 12)
+                sizedBox(height: 12)
               ],
             ),
           ), //body
@@ -50,10 +50,10 @@ class _MyDrawerState extends State<MyDrawer> {
             padding: const EdgeInsets.only(top: 1),
             child: Column(
               children: [
-                Divider(height: 10, thickness: 2, color: Colors.grey),
+                const Divider(height: 10, thickness: 2, color: Colors.grey),
 
                 //Home
-                ListTile(
+                const ListTile(
                     leading: Icon(Icons.home, color: Colors.grey),
                     title: Text("Home",
                         style: TextStyle(
@@ -62,8 +62,8 @@ class _MyDrawerState extends State<MyDrawer> {
                     onTap: null),
 
                 //My Orders
-                Divider(height: 10, thickness: 2, color: Colors.grey),
-                ListTile(
+                const Divider(height: 10, thickness: 2, color: Colors.grey),
+                const ListTile(
                     leading: Icon(Icons.reorder, color: Colors.grey),
                     title: Text("My Orders",
                         style: TextStyle(
@@ -71,8 +71,8 @@ class _MyDrawerState extends State<MyDrawer> {
                         )),
                     onTap: null),
                 //Not Yet Received
-                Divider(height: 10, thickness: 2, color: Colors.grey),
-                ListTile(
+                const Divider(height: 10, thickness: 2, color: Colors.grey),
+                const ListTile(
                     leading: Icon(Icons.picture_in_picture_alt_rounded,
                         color: Colors.grey),
                     title: Text("Not Yet Received",
@@ -82,8 +82,8 @@ class _MyDrawerState extends State<MyDrawer> {
                     onTap: null),
 
                 //History
-                Divider(height: 10, thickness: 2, color: Colors.grey),
-                ListTile(
+                const Divider(height: 10, thickness: 2, color: Colors.grey),
+                const ListTile(
                     leading: Icon(Icons.access_time, color: Colors.grey),
                     title: Text("History",
                         style: TextStyle(
@@ -92,8 +92,8 @@ class _MyDrawerState extends State<MyDrawer> {
                     onTap: null),
 
                 //Search
-                Divider(height: 10, thickness: 2, color: Colors.grey),
-                ListTile(
+                const Divider(height: 10, thickness: 2, color: Colors.grey),
+                const ListTile(
                     leading: Icon(Icons.search, color: Colors.grey),
                     title: Text("Search",
                         style: TextStyle(
@@ -102,10 +102,10 @@ class _MyDrawerState extends State<MyDrawer> {
                     onTap: null),
 
                 //LogOut
-                Divider(height: 10, thickness: 2, color: Colors.grey),
+                const Divider(height: 10, thickness: 2, color: Colors.grey),
                 ListTile(
-                    leading: Icon(Icons.exit_to_app, color: Colors.grey),
-                    title: Text("LogOut",
+                    leading: const Icon(Icons.exit_to_app, color: Colors.grey),
+                    title: const Text("LogOut",
                         style: TextStyle(
                           color: Colors.grey,
                         )),

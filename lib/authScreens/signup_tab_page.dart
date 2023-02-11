@@ -195,7 +195,7 @@ class _SignupTaPageState extends State<SignupTaPage> {
               )),
           ElevatedButton(
             style: ElevatedButton.styleFrom(
-              primary: Theme.of(context).primaryColor,
+              backgroundColor: Theme.of(context).primaryColor,
               padding:
                   const EdgeInsets.symmetric(vertical: 15, horizontal: 100),
             ),

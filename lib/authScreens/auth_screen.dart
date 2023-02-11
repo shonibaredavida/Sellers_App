@@ -58,8 +58,8 @@ class _AuhScreenState extends State<AuhScreen> {
                     )),
               ]),
         ),
-        body: TabBarView(children: [
-          const LoginTabPage(),
+        body: const TabBarView(children: [
+          LoginTabPage(),
           SignupTaPage(),
         ]),
       ),
