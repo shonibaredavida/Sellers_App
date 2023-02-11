@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:sellers_app/Models/address_model.dart';
-import 'package:sellers_app/global/global.dart';
 import 'package:sellers_app/orders_screen/address_design_widget.dart';
 import 'package:sellers_app/orders_screen/status_banner_widget.dart';
 
@@ -22,8 +21,6 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
       body: SingleChildScrollView(
         child: FutureBuilder(
             future: FirebaseFirestore.instance
-                .collection("users")
-                .doc(sharedPreferences!.getString("uid"))
                 .collection("orders")
                 .doc(widget.orderID.toString())
                 .get(),
@@ -76,9 +73,9 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                       color: Colors.red,
                     ),
                     Container(
-                      child: orderDataStatus == "ended"
-                          ? Image.asset("images/delivered.png")
-                          : Image.asset("images/state.png"),
+                      child: orderDataStatus != "ended"
+                          ? Image.asset("images/packing.jpg")
+                          : Image.asset("images/delivered.jpg"),
                     ),
                     const Divider(
                       thickness: 2,
@@ -87,7 +84,7 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                     FutureBuilder(
                       future: FirebaseFirestore.instance
                           .collection("users")
-                          .doc(sharedPreferences!.getString("uid"))
+                          .doc(orderDataMap["orderBy"])
                           .collection("userAddress")
                           .doc(orderDataMap["addressID"])
                           .get(),

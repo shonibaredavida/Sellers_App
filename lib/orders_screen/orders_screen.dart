@@ -2,9 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:sellers_app/global/global.dart';
 import 'package:sellers_app/orders_screen/order_card.dart';
-import 'package:sellers_app/assistant_method/cart_methods.dart';
 
-/* class OrdersScreen extends StatefulWidget {
+/* class OrdersScreen ext ends StatefulWidget {
   const OrdersScreen({super.key});
 
   @override
@@ -161,7 +160,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
                           whereIn: cartMethods.separateOrderItemIDs(
                               (dataSnapShot.data.docs[index].data()
                                   as Map<String, dynamic>)["productIDs"]))
-                      .where("SellerUID",
+                      .where("SellerUID  ",
                           whereIn: (dataSnapShot.data.docs[index].data()
                               as Map<String, dynamic>)["uid"])
                       .orderBy("publishedDate", descending: true)

@@ -17,25 +17,14 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MultiProvider(
-      providers: [],
-      child: MaterialApp(
-          debugShowCheckedModeBanner: false,
-          title: 'iShop Users App',
-          theme: ThemeData(
-            primarySwatch: Colors.purple,
-          ),
-          home: const MySplashScreen()),
-    );
-
-    /*   return MaterialApp(
+    return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'iShop Sellers App',
       theme: ThemeData(
         primarySwatch: Colors.purple,
       ),
       home: const MySplashScreen(),
-    ); */
+    );
   }
 }
 

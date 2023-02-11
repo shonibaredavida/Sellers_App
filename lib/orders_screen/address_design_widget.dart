@@ -91,11 +91,13 @@ class AddressDesign extends StatelessWidget {
         GestureDetector(
           onTap: () {
             if (orderStatus == "ended") {
-              //implement reorder the same cart
+              Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => const MySplashScreen()));
             } else if (orderStatus == "shifted") {
-              //implement "Parcel Delivered and Received "
+              Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => const MySplashScreen()));
             } else if (orderStatus == "normal") {
-              Navigator.pop(context);
+              // //implement changing the order status to shifted
             } else {
               Navigator.of(context).push(MaterialPageRoute(
                   builder: (context) => const MySplashScreen()));
@@ -123,11 +125,11 @@ class AddressDesign extends StatelessWidget {
                 child: Center(
                   child: Text(
                     orderStatus == "ended"
-                        ? "Do you want to Rate the seller?"
+                        ? "Go Back"
                         : orderStatus == "Shifted"
-                            ? "Parcel Delivered and Received \n Click to Confirm"
+                            ? "Go Back"
                             : orderStatus == "normal"
-                                ? "Go Back"
+                                ? "Parcel Packed &\n Shifted to the nearest Picking Point \n Click to Confirm"
                                 : "",
                     textAlign: TextAlign.center,
                     style: const TextStyle(
