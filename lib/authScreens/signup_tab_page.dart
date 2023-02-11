@@ -10,9 +10,11 @@ import 'package:sellers_app/splashScreen/my_splash_screen.dart';
 import 'package:sellers_app/widgets/custom_text_field.dart';
 import 'package:sellers_app/widgets/loading_dialog.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:firebase_storage/firebase_storage.dart' as fStorage;
+import 'package:firebase_storage/firebase_storage.dart' as f_storage;
 
 class SignupTaPage extends StatefulWidget {
+  const SignupTaPage({super.key});
+
   @override
   State<SignupTaPage> createState() => _SignupTaPageState();
 }
@@ -50,24 +52,23 @@ class _SignupTaPageState extends State<SignupTaPage> {
       "earnings": 0.0,
       "status": "approved",
     });
-    if (dev) print("WE WE WE WE saving to firebase");
+    if (dev) printo(" saving to firebase");
 // save locally
     sharedPreferences = await SharedPreferences.getInstance();
     await sharedPreferences!.setString("uid", currentUser.uid);
     await sharedPreferences!.setString("email", currentUser.email!);
     await sharedPreferences!.setString("name", namecontroller.text.trim());
-    await sharedPreferences!.setString("photoUrl", downloadUrlImage);
+    await sharedPreferences!.setString("photoUrl", downloadUrlImage).then(
+        (value) => Navigator.push(context,
+            MaterialPageRoute(builder: (c) => const MySplashScreen())));
 
-    if (dev)
-      print("WE WE WE WE saving locally & redirecting to MySplashScreen");
+    if (dev) printo(" saving locally & redirecting to MySplashScreen");
 // route to home page
-    Navigator.push(
-        context, MaterialPageRoute(builder: (c) => MySplashScreen()));
   }
 
   saveInformationToDatabase(email, password) async {
     //authenticating the user using firebase
-    if (dev) print("WE WE WE WE creating user");
+    if (dev) printo(" creating user");
 
     User? currentSeller;
     await FirebaseAuth.instance
@@ -75,14 +76,14 @@ class _SignupTaPageState extends State<SignupTaPage> {
         .then((auth) {
       currentSeller = auth.user;
     }).catchError((errorMessage) {
-      if (dev) print("WE WE WE WE creating user-- error occured");
+      if (dev) printo(" creating user-- error occured");
 
       Navigator.of(context).pop();
       Fluttertoast.showToast(msg: "Error Occured: \n $errorMessage");
     });
 
     if (currentSeller != null) {
-      if (dev) print("WE WE WE WE logged in");
+      if (dev) printo(" logged in");
       //save the user information to Database n save locally
       saveInfoToFireStoreAndLocally(currentSeller!);
     }
@@ -91,7 +92,7 @@ class _SignupTaPageState extends State<SignupTaPage> {
   formValidation() async {
     if (imgXFile == null) // no image selected
     {
-      if (dev) print('WE WE WE WE SELECT pix');
+      if (dev) printo(' SELECT pix');
       Fluttertoast.showToast(msg: "Pls Select an Image");
     } else {
       if (emailController.text.isNotEmpty &&
@@ -100,11 +101,11 @@ class _SignupTaPageState extends State<SignupTaPage> {
           namecontroller.text.isNotEmpty &&
           confirmPasswordController.text.isNotEmpty &&
           passwordController.text.isNotEmpty) {
-        if (dev) print('WE WE WE WE form filled ');
+        if (dev) printo(' form filled ');
         // email n name, password, confirmatio n given
         if (passwordController.text == confirmPasswordController.text) {
           //password n confirmation field are same
-          if (dev) print('WE WE WE WE password == confirmPassword');
+          if (dev) printo(' password == confirmPassword');
 
           showDialog(
               context: context,
@@ -115,18 +116,18 @@ class _SignupTaPageState extends State<SignupTaPage> {
               });
           //1~ uploading pix and downloading Pix URL,
           String filename = DateTime.now().microsecondsSinceEpoch.toString();
-          fStorage.Reference storageRef = fStorage.FirebaseStorage.instance
+          f_storage.Reference storageRef = f_storage.FirebaseStorage.instance
               .ref()
               .child("sellersImage")
               .child(filename);
-          fStorage.UploadTask uploadImageTask =
+          f_storage.UploadTask uploadImageTask =
               storageRef.putFile(File(imgXFile!.path));
-          fStorage.TaskSnapshot taskSnapshot =
+          f_storage.TaskSnapshot taskSnapshot =
               await uploadImageTask.whenComplete(() => null);
           await taskSnapshot.ref.getDownloadURL().then((urlImage) {
             downloadUrlImage = urlImage;
           });
-          if (dev) print(" WE WE WE WE linking to firebase");
+          if (dev) printo("  linking to firebase");
 
           //2~  Upload user info to firebase
           saveInformationToDatabase(

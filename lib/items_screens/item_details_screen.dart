@@ -3,8 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:sellers_app/Models/items_models.dart';
 import 'package:sellers_app/global/global.dart';
-import 'package:sellers_app/items_screens/items_screen.dart';
-import 'package:sellers_app/mainScreens/home_screen.dart';
 import 'package:sellers_app/splashScreen/my_splash_screen.dart';
 
 class ItemsDetailsScreen extends StatefulWidget {

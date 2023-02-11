@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import "package:flutter/material.dart";
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:sellers_app/Models/brands_model.dart';
@@ -46,8 +45,10 @@ class _HomeScreenState extends State<HomeScreen> {
         actions: [
           IconButton(
               onPressed: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (c) => UploadBrandsScreen()));
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (c) => const UploadBrandsScreen()));
               },
               icon: const Icon(
                 Icons.add,
@@ -64,16 +65,15 @@ class _HomeScreenState extends State<HomeScreen> {
           StreamBuilder(
             builder: (context, AsyncSnapshot dataSnapShot) {
               if (dataSnapShot.hasData) {
-                if (dev) print("WE WE WE WE brands exist");
+                if (dev) printo(" brands exist");
 
 //if there are brands
                 return SliverStaggeredGrid.countBuilder(
                     crossAxisCount: 1,
                     staggeredTileBuilder: (c) => const StaggeredTile.fit(1),
                     itemBuilder: ((context, index) {
-                      if (dev)
-                        print("WE WE WE WE Streaming the exisiting brands ");
-
+                      if (dev) printo(" Streaming the exisiting brands ");
+// this translate the stream to the model class and the output is used in the ui design
                       Brands brandsModel = Brands.fromJson(
                           dataSnapShot.data.docs[index].data()
                               as Map<String, dynamic>);
@@ -84,7 +84,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     }),
                     itemCount: dataSnapShot.data.docs.length);
               } else {
-                if (dev) print("WE WE WE WE No Brands Added' ");
+                if (dev) printo(" No Brands Added' ");
 
                 //if there are no brands
                 return const SliverToBoxAdapter(
