@@ -8,12 +8,13 @@ import 'package:sellers_app/brandsScreens/home_screen.dart';
 import 'package:sellers_app/global/global.dart';
 import 'package:sellers_app/splashScreen/my_splash_screen.dart';
 import 'package:sellers_app/widgets/progress_bar.dart';
-import 'package:firebase_storage/firebase_storage.dart' as fStorage;
+import 'package:firebase_storage/firebase_storage.dart' as f_storage;
 import 'package:shared_preferences/shared_preferences.dart';
 
 class UploadItemsScreen extends StatefulWidget {
-  UploadItemsScreen(this.model);
-  Brands? model;
+  const UploadItemsScreen(this.model, {super.key});
+
+  final Brands? model;
   @override
   State<UploadItemsScreen> createState() => _UploadItemsScreenState();
 }
@@ -32,7 +33,7 @@ class _UploadItemsScreenState extends State<UploadItemsScreen> {
   getImageFromGallery() async {
     Navigator.of(context).pop();
     imgXFile = await imagePicker.pickImage(source: ImageSource.gallery);
-    if (dev) print("WE WE WE WE WE get Image From Gallery");
+    if (dev) printo(" get Image From Gallery");
 
     setState(() {
       imgXFile;
@@ -40,7 +41,7 @@ class _UploadItemsScreenState extends State<UploadItemsScreen> {
   }
 
   captureImageFromCamera() async {
-    if (dev) print("WE WE WE WE WE IMage Captured");
+    if (dev) printo(" IMage Captured");
     Navigator.of(context).pop();
     imgXFile = await imagePicker.pickImage(source: ImageSource.camera);
     setState(() {
@@ -49,7 +50,7 @@ class _UploadItemsScreenState extends State<UploadItemsScreen> {
   }
 
   saveItemInfoToFireStoreDB() {
-    if (dev) print("saving Item info to related brand collection");
+    if (dev) printo("saving Item info to related brand collection");
     FirebaseFirestore.instance
         .collection("sellers")
         .doc(sharedPreferences!.getString("uid"))
@@ -70,7 +71,7 @@ class _UploadItemsScreenState extends State<UploadItemsScreen> {
       "status": "available",
       "thumbnailUrl": downloadUrlImage,
     }).then((value) {
-      if (dev) print("saving Item info to items collection");
+      if (dev) printo("saving Item info to items collection");
       FirebaseFirestore.instance.collection("items").doc(itemUniqueId).set({
         "itemID": itemUniqueId,
         "brandID": widget.model!.brandID,
@@ -89,7 +90,7 @@ class _UploadItemsScreenState extends State<UploadItemsScreen> {
     setState(() {
       uploading = false;
     });
-    if (dev) print("WE WE WE WE WE save item Info To FireStore DB");
+    if (dev) printo(" save item Info To FireStore DB");
     Navigator.push(
         context, MaterialPageRoute(builder: (c) => const HomeScreen()));
   }
@@ -105,26 +106,26 @@ class _UploadItemsScreenState extends State<UploadItemsScreen> {
           uploading = true;
         });
         //1 start upload of image n download imageUrl
-        if (dev) print(" WE WE WE WE getting the url");
+        if (dev) printo(" getting the url");
         String filename = DateTime.now().microsecondsSinceEpoch.toString();
-        if (dev) print(" WE WE WE WE getting the filenme");
-        fStorage.Reference storageRef = fStorage.FirebaseStorage.instance
+        if (dev) printo(" getting the filenme");
+        f_storage.Reference storageRef = f_storage.FirebaseStorage.instance
             .ref()
             .child("sellersItemImages")
             .child(filename);
-        if (dev) print(" WE WE WE WE creating storageRef");
-        fStorage.UploadTask uploadImageTask =
+        if (dev) printo(" creating storageRef");
+        f_storage.UploadTask uploadImageTask =
             storageRef.putFile(File(imgXFile!.path));
-        if (dev) print(" WE WE WE WE uploadtask");
-        fStorage.TaskSnapshot taskSnapshot =
+        if (dev) printo(" uploadtask");
+        f_storage.TaskSnapshot taskSnapshot =
             await uploadImageTask.whenComplete(() {
-          if (dev) print(" WE WE WE WE finish taskSnapshot");
+          if (dev) printo(" finish taskSnapshot");
         });
         await taskSnapshot.ref.getDownloadURL().then((urlImage) {
           downloadUrlImage = urlImage;
-          if (dev) print(" WE WE WE WE gotten the url $downloadUrlImage");
+          if (dev) printo(" gotten the url $downloadUrlImage");
         });
-        if (dev) print(" WE WE WE WE going to firetore");
+        if (dev) printo(" going to firetore");
         //2 save item info to firestore
         saveItemInfoToFireStoreDB();
         //3 store the item locally
@@ -134,7 +135,7 @@ class _UploadItemsScreenState extends State<UploadItemsScreen> {
         await sharedPreferences!
             .setString("itemTitle", itemTitleController!.text.trim());
         await sharedPreferences!.setString("thumbnailUrl", downloadUrlImage);
-        if (dev) print("WE WE WE WE WE save to Device");
+        if (dev) printo(" save to Device");
       } else {
         //form is not completely filled
         Fluttertoast.showToast(msg: "Pls fill form");
@@ -318,7 +319,7 @@ class _UploadItemsScreenState extends State<UploadItemsScreen> {
                     obtainImageDialogBox(context);
                   },
                   style: ElevatedButton.styleFrom(
-                    primary: Colors.deepPurple,
+                    backgroundColor: Colors.deepPurple,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(30),
                     ),

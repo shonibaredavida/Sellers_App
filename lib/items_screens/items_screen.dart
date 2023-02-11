@@ -9,8 +9,9 @@ import 'package:sellers_app/items_screens/upload_items_screen.dart';
 import 'package:sellers_app/widgets/text_delegate_header_widget.dart';
 
 class ItemsScreen extends StatefulWidget {
-  ItemsScreen({this.model});
-  Brands? model;
+  const ItemsScreen({super.key, this.model});
+
+  final Brands? model;
   @override
   State<ItemsScreen> createState() => _ItemsScreenState();
 }
@@ -67,7 +68,7 @@ class _ItemsScreenState extends State<ItemsScreen> {
               if (dataSnapShot.hasData) {
 //if there are brands
 
-                if (dev) print(" WE WE WE WE getting brands");
+                if (dev) printo("  getting brands");
                 return SliverStaggeredGrid.countBuilder(
                     crossAxisCount: 1,
                     staggeredTileBuilder: (c) => const StaggeredTile.fit(1),
@@ -82,7 +83,7 @@ class _ItemsScreenState extends State<ItemsScreen> {
                     }),
                     itemCount: dataSnapShot.data.docs.length);
               } else {
-                if (dev) print(" WE WE WE WE No brand available");
+                if (dev) printo("  No brand available");
                 //if there are no brands
                 return const SliverToBoxAdapter(
                     child: Text(

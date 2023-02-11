@@ -6,8 +6,9 @@ import 'package:sellers_app/global/global.dart';
 import 'package:sellers_app/splashScreen/my_splash_screen.dart';
 
 class ItemsDetailsScreen extends StatefulWidget {
-  ItemsDetailsScreen({this.model});
-  Items? model;
+  const ItemsDetailsScreen({super.key, this.model});
+
+  final Items? model;
   @override
   State<ItemsDetailsScreen> createState() => _ItemsDetailsScreenState();
 }
@@ -27,7 +28,7 @@ class _ItemsDetailsScreenState extends State<ItemsDetailsScreen> {
           .collection("items")
           .doc(widget.model!.itemID)
           .delete();
-      if (dev) print(" WE WE WE WE  Item deleted successfully");
+      if (dev) printo("   Item deleted successfully");
       Fluttertoast.showToast(msg: "Item Deleted Successfully");
       Navigator.of(context).push(
           MaterialPageRoute(builder: (context) => const MySplashScreen()));
@@ -56,7 +57,7 @@ class _ItemsDetailsScreenState extends State<ItemsDetailsScreen> {
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
-          if (dev) print(" WE WE WE WE initialized Item deletion");
+          if (dev) printo("  initialized Item deletion");
           deleteItem();
         },
         label: const Text("Delete this Item"),
@@ -69,7 +70,7 @@ class _ItemsDetailsScreenState extends State<ItemsDetailsScreen> {
         Image.network(
           widget.model!.thumbnailUrl.toString(),
         ),
-        sizedbox(),
+        sizedBox(),
         Padding(
           padding: const EdgeInsets.only(top: 8, left: 8),
           child: Text(
