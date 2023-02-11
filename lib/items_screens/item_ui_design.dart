@@ -4,9 +4,10 @@ import 'package:sellers_app/global/global.dart';
 import 'package:sellers_app/items_screens/item_details_screen.dart';
 
 class ItemsUIDesignWidget extends StatefulWidget {
-  Items? model;
-  BuildContext? context;
-  ItemsUIDesignWidget({this.context, this.model});
+  final Items? model;
+
+  final BuildContext? context;
+  const ItemsUIDesignWidget({super.key, this.context, this.model});
   @override
   State<ItemsUIDesignWidget> createState() => _ItemsUIDesignWidgetState();
 }
@@ -30,7 +31,7 @@ class _ItemsUIDesignWidgetState extends State<ItemsUIDesignWidget> {
             height: 270,
             width: MediaQuery.of(context).size.width,
             child: Column(children: [
-              sizedbox(),
+              sizedBox(),
               Text(
                 widget.model!.itemTitle.toString(),
                 style: const TextStyle(
@@ -40,13 +41,13 @@ class _ItemsUIDesignWidgetState extends State<ItemsUIDesignWidget> {
                   letterSpacing: 3,
                 ),
               ),
-              sizedbox(),
+              sizedBox(),
               Image.network(
                 widget.model!.thumbnailUrl.toString(),
                 height: 220,
                 fit: BoxFit.cover,
               ),
-              sizedbox(),
+              sizedBox(),
               Text(
                 widget.model!.itemInfo.toString(),
                 style: const TextStyle(

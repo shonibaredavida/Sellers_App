@@ -22,10 +22,10 @@ class _BrandsUIDesignWidgetState extends State<BrandsUIDesignWidget> {
         .collection("brands")
         .doc(widget.model!.brandID)
         .delete();
-    if (dev) print("WE WE WE WE WE item deleted from FireStore DB ");
+    if (dev) printo(" item deleted from FireStore DB ");
     Fluttertoast.showToast(msg: "Brand Deleted ");
     Navigator.of(context)
-        .push(MaterialPageRoute(builder: (context) => MySplashScreen()));
+        .push(MaterialPageRoute(builder: (context) => const MySplashScreen()));
   }
 
   @override
@@ -68,9 +68,9 @@ class _BrandsUIDesignWidgetState extends State<BrandsUIDesignWidget> {
                   ),
                   IconButton(
                     onPressed: () {
-                      if (dev)
-                        print(
-                            "WE WE WE WE WE item deletion from FireStore DB initialized ");
+                      if (dev) {
+                        printo("item deletion from FireStore DB initialized ");
+                      }
 
                       deleteBrand(widget.model!.brandID);
                     },
