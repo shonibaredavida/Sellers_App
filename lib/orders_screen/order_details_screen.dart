@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:sellers_app/Models/address_model.dart';
+import 'package:sellers_app/global/global.dart';
 import 'package:sellers_app/orders_screen/address_design_widget.dart';
 import 'package:sellers_app/orders_screen/status_banner_widget.dart';
 
@@ -26,9 +27,12 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                 .get(),
             builder: (c, AsyncSnapshot dataSnapshot) {
               if (dataSnapshot.hasData) {
+                if (dev) printo("retrieving order information");
                 Map? orderDataMap =
                     dataSnapshot.data.data() as Map<String, dynamic>;
                 orderDataStatus = orderDataMap['status'].toString();
+
+                if (dev) printo("displaying order information");
                 return Column(
                   children: [
                     StatusBanner(
@@ -97,7 +101,8 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                               sellerId: orderDataMap['sellerUID'],
                               orderId: widget.orderID,
                               orderStatus: orderDataStatus,
-                              orderedByUser: orderDataMap['orderBy']);
+                              orderedByUser: orderDataMap['orderBy'],
+                              orderTotalAmount: orderDataMap['totalAmount']);
                         } else {
                           return const Text("No Data Found");
                         }
