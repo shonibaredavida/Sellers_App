@@ -3,6 +3,7 @@ import "package:flutter/material.dart";
 import 'package:sellers_app/brandsScreens/home_screen.dart';
 import 'package:sellers_app/global/global.dart';
 import 'package:sellers_app/orders_screen/orders_screen.dart';
+import 'package:sellers_app/shifted_parcel-sscrens/shifted_order.dart';
 import 'package:sellers_app/splashScreen/my_splash_screen.dart';
 
 class MyDrawer extends StatefulWidget {
@@ -84,14 +85,20 @@ class _MyDrawerState extends State<MyDrawer> {
                     }),
                 //Not Yet Received
                 const Divider(height: 10, thickness: 2, color: Colors.grey),
-                const ListTile(
-                    leading: Icon(Icons.picture_in_picture_alt_rounded,
+                ListTile(
+                    leading: const Icon(Icons.picture_in_picture_alt_rounded,
                         color: Colors.grey),
-                    title: Text("Shifted parcels",
+                    title: const Text("Shifted parcels",
                         style: TextStyle(
                           color: Colors.grey,
                         )),
-                    onTap: null),
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  const ShiftedParcelScreen()));
+                    }),
 
                 //History
                 const Divider(height: 10, thickness: 2, color: Colors.grey),
