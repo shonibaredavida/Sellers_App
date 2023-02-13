@@ -1,4 +1,6 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:sellers_app/Models/address_model.dart';
 import 'package:sellers_app/global/global.dart';
 import 'package:sellers_app/splashScreen/my_splash_screen.dart';
@@ -9,13 +11,15 @@ class AddressDesign extends StatelessWidget {
   final String? orderId;
   final String? sellerId;
   final String? orderedByUser;
+  final String? orderTotalAmount;
   const AddressDesign(
       {super.key,
       this.model,
       this.sellerId,
       this.orderId,
       this.orderStatus,
-      this.orderedByUser});
+      this.orderedByUser,
+      this.orderTotalAmount});
 
   @override
   Widget build(BuildContext context) {
@@ -91,14 +95,59 @@ class AddressDesign extends StatelessWidget {
         GestureDetector(
           onTap: () {
             if (orderStatus == "ended") {
+              if (dev) printo("user order status is \"ended\"");
               Navigator.of(context).push(MaterialPageRoute(
                   builder: (context) => const MySplashScreen()));
             } else if (orderStatus == "shifted") {
+              if (dev) printo("user order status is \"shifted\"");
               Navigator.of(context).push(MaterialPageRoute(
                   builder: (context) => const MySplashScreen()));
             } else if (orderStatus == "normal") {
-              // //implement changing the order status to shifted
+              //update user earnings
+
+              if (dev) printo("user order status is normal");
+
+              FirebaseFirestore.instance
+                  .collection("sellers")
+                  .doc(sharedPreferences!.getString("uid"))
+                  .update({
+                "earnings": (double.parse(previousSellerEarnings) +
+                    double.parse(orderTotalAmount!))
+              }).whenComplete(() {
+                if (dev) printo("updated seller earnings");
+
+                // //implement changing the order status to shifted
+                FirebaseFirestore.instance
+                    .collection("orders")
+                    .doc(orderId)
+                    .update({
+                  "status": "shifted",
+                });
+              }).whenComplete(() {
+                if (dev) printo("updated order status to shifted");
+                FirebaseFirestore.instance
+                    .collection("users")
+                    .doc(orderedByUser)
+                    .collection("orders")
+                    .doc(orderId)
+                    .update({
+                  "status": "shifted",
+                });
+              }).whenComplete(() {
+                if (dev) printo("updated user order status to shifted ");
+                //send notification to the user... order shifted
+                //
+                if (dev) printo("sending post notification to specific user");
+
+                Fluttertoast.showToast(msg: "Confirmed Successfully.");
+
+                if (dev) printo("sent flutterToast to Seller");
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => const MySplashScreen()));
+              });
             } else {
+              if (dev) printo(" user order  has no status ");
+
               Navigator.of(context).push(MaterialPageRoute(
                   builder: (context) => const MySplashScreen()));
             }

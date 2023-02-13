@@ -87,7 +87,7 @@ class _MyDrawerState extends State<MyDrawer> {
                 const ListTile(
                     leading: Icon(Icons.picture_in_picture_alt_rounded,
                         color: Colors.grey),
-                    title: Text("Not Yet Received",
+                    title: Text("Shifted parcels",
                         style: TextStyle(
                           color: Colors.grey,
                         )),

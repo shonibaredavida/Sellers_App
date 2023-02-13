@@ -16,6 +16,25 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  getSellerEarningsFFromDB() {
+    FirebaseFirestore.instance
+        .collection("sellers")
+        .doc(sharedPreferences!.getString("uid"))
+        .get()
+        .then((sellerSnapshot) {
+      previousSellerEarnings = sellerSnapshot.data()!['earnings'].toString();
+    });
+
+    if (dev) printo("gotten seller previous earning");
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    if (dev) printo("getting seller previous earning");
+    getSellerEarningsFFromDB();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
