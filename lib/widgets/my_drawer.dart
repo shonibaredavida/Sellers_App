@@ -1,7 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import "package:flutter/material.dart";
 import 'package:sellers_app/brandsScreens/home_screen.dart';
+import 'package:sellers_app/earnings_screen/earnings_screen.dart';
 import 'package:sellers_app/global/global.dart';
+import 'package:sellers_app/history_screen/history_screen.dart';
 import 'package:sellers_app/orders_screen/orders_screen.dart';
 import 'package:sellers_app/shifted_parcel-sscrens/shifted_order.dart';
 import 'package:sellers_app/splashScreen/my_splash_screen.dart';
@@ -100,25 +102,32 @@ class _MyDrawerState extends State<MyDrawer> {
                                   const ShiftedParcelScreen()));
                     }),
 
+                //earnings
+                const Divider(height: 10, thickness: 2, color: Colors.grey),
+                ListTile(
+                    leading:
+                        const Icon(Icons.monetization_on, color: Colors.grey),
+                    title: const Text("Earnings",
+                        style: TextStyle(
+                          color: Colors.grey,
+                        )),
+                    onTap: () {
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => const EarningsSreen()));
+                    }),
+
                 //History
                 const Divider(height: 10, thickness: 2, color: Colors.grey),
-                const ListTile(
-                    leading: Icon(Icons.access_time, color: Colors.grey),
-                    title: Text("History",
+                ListTile(
+                    leading: const Icon(Icons.access_time, color: Colors.grey),
+                    title: const Text("History",
                         style: TextStyle(
                           color: Colors.grey,
                         )),
-                    onTap: null),
-
-                //Search
-                const Divider(height: 10, thickness: 2, color: Colors.grey),
-                const ListTile(
-                    leading: Icon(Icons.search, color: Colors.grey),
-                    title: Text("Search",
-                        style: TextStyle(
-                          color: Colors.grey,
-                        )),
-                    onTap: null),
+                    onTap: () {
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => const HistoryScreen()));
+                    }),
 
                 //LogOut
                 const Divider(height: 10, thickness: 2, color: Colors.grey),
