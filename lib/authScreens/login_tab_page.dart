@@ -84,14 +84,17 @@ class _LoginTabPageState extends State<LoginTabPage> {
           await sharedPreferences!.setString("name", record.data()!["name"]);
           await sharedPreferences!
               .setString("photoUrl", record.data()!["photoUrl"]);
+
           await sharedPreferences!
-              .setString("address", record.data()!["address"]);
-          await sharedPreferences!
-              .setDouble("earnings", record.data()!["earnings"])
-              .then((value) => Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => const MySplashScreen())));
+              .setString("address", record.data()!["address"])
+              .then((value) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const MySplashScreen(),
+              ),
+            );
+          });
 
           //send the seller to home screen
 

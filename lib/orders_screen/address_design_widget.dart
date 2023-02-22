@@ -112,7 +112,8 @@ class AddressDesign extends StatelessWidget {
                   .doc(sharedPreferences!.getString("uid"))
                   .update({
                 "earnings": (double.parse(previousSellerEarnings) +
-                    double.parse(orderTotalAmount!))
+                        double.parse(orderTotalAmount!))
+                    .toString()
               }).whenComplete(() {
                 if (dev) printo("updated seller earnings");
 
