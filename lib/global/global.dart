@@ -20,3 +20,22 @@ printo(message) {
   // ignore: avoid_print
   print('WE WE WE WE $message');
 }
+
+Color appDeeperPrimaryColor = Colors.purpleAccent;
+
+Widget text(String data,
+    {Color? color,
+    double? letterSpacing,
+    double? fontSize,
+    TextAlign? textAlign,
+    FontWeight? fontWeight}) {
+  return Text(
+    data,
+    textAlign: textAlign ?? TextAlign.start,
+    style: TextStyle(
+        fontWeight: fontWeight ?? FontWeight.normal,
+        color: color ?? Colors.white,
+        letterSpacing: letterSpacing ?? 2,
+        fontSize: fontSize ?? 16),
+  );
+}
