@@ -1,19 +1,22 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:sellers_app/functions/functions.dart';
 import 'package:sellers_app/global/global.dart';
 
 class PushNotifcationsSystem {
   FirebaseMessaging messaging = FirebaseMessaging.instance;
 
   //3 possible scenarios when notification is received
-  Future whenNotficationIsReceived() async {
+  Future whenNotficationIsReceived(context) async {
     //1. terminated
-    //when app is completely closed &PNS opens app..
+    //when app is completely closed & PNS opens app..
     FirebaseMessaging.instance
         .getInitialMessage()
         .then((RemoteMessage? remoteMessage) {
       if (remoteMessage != null) {
         // when open then show Notification data
+
+        showNotificationWhenOpenApp(remoteMessage.data['userOrderId'], context);
       }
     });
 
@@ -22,6 +25,7 @@ class PushNotifcationsSystem {
     FirebaseMessaging.onMessage.listen((RemoteMessage? remoteMessage) {
       if (remoteMessage != null) {
         //show notificaton data immediately on app
+        showNotificationWhenOpenApp(remoteMessage.data['userOrderId'], context);
       }
     });
 
@@ -30,11 +34,30 @@ class PushNotifcationsSystem {
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage? remoteMessage) {
       if (remoteMessage != null) {
         //switches to the app and shows the notification
+        showNotificationWhenOpenApp(remoteMessage.data['userOrderId'], context);
       }
     });
   }
 
   //device recognition token
+  showNotificationWhenOpenApp(orderId, context) async {
+    await FirebaseFirestore.instance
+        .collection("orders")
+        .doc(orderId)
+        .get()
+        .then((snapshot) {
+      if (snapshot.data()!['status'] == 'ended') {
+        showReusableSnackBar(
+            "Order ID # $orderId\n\n has been delivered & received by the user",
+            context);
+      } else {
+        showReusableSnackBar(
+            "you have new Order. \nOrder ID # $orderId\n\n has delivered & received by the user",
+            context);
+      }
+    });
+  }
+
   Future generateDeviceRecognitionToken() async {
     String? registrationDeviceToken = await messaging.getToken();
     FirebaseFirestore.instance

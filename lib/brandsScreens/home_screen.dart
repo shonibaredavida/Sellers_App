@@ -17,7 +17,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  getSellerEarningsFFromDB() {
+  getSellerEarningsFromDB() {
     FirebaseFirestore.instance
         .collection("sellers")
         .doc(sharedPreferences!.getString("uid"))
@@ -35,9 +35,10 @@ class _HomeScreenState extends State<HomeScreen> {
 
     PushNotifcationsSystem pushNotifcationsSystem = PushNotifcationsSystem();
     pushNotifcationsSystem.generateDeviceRecognitionToken();
+    pushNotifcationsSystem.whenNotficationIsReceived(context);
     if (dev) printo(" generating Seller token");
     if (dev) printo("getting seller previous earning");
-    getSellerEarningsFFromDB();
+    getSellerEarningsFromDB();
   }
 
   @override
