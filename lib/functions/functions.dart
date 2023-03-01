@@ -3,9 +3,9 @@ import 'package:sellers_app/global/global.dart';
 
 showReusableSnackBar(String title, BuildContext context) {
   SnackBar snackBar = SnackBar(
-    backgroundColor: appDeeperPrimaryColor,
+    backgroundColor: Colors.black,
     duration: const Duration(seconds: 2),
-    content: text(title, fontSize: 32, color: Colors.white),
+    content: text(title, fontSize: 16, color: Colors.white),
   );
   ScaffoldMessenger.of(context).showSnackBar(snackBar);
 }
