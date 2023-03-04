@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:sellers_app/Models/address_model.dart';
 import 'package:sellers_app/global/global.dart';
+import 'package:sellers_app/push_notification/push_notification_system.dart';
 import 'package:sellers_app/splashScreen/my_splash_screen.dart';
 
 class AddressDesign extends StatelessWidget {
@@ -137,6 +138,7 @@ class AddressDesign extends StatelessWidget {
               }).whenComplete(() {
                 if (dev) printo("updated user order status to shifted ");
                 //send notification to the user... order shifted
+                sendNotificationToUser(orderedByUser, orderId);
                 //
                 if (dev) printo("sending post notification to specific user");
 
@@ -192,5 +194,23 @@ class AddressDesign extends StatelessWidget {
         )
       ],
     );
+  }
+
+  sendNotificationToUser(String? orderedByUser, String? orderId) async {
+    FirebaseFirestore.instance
+        .collection("users")
+        .doc(orderedByUser)
+        .get()
+        .then((snapshot) {
+      if (snapshot.data()!['userDeviceToken'] != null) {
+        notificationFormat(
+          userDeviceToken: snapshot.data()!['userDeviceToken'].toString(),
+          orderId: orderId,
+          notificationTitle: 'Parcel Shifted',
+          notificationBody:
+              'Dear ${snapshot.data()!['name'].toString()}, your Parcel (# $orderId) has been successfully shifted to your nearest picking center \n by ${sharedPreferences!.getString("name")}.',
+        );
+      }
+    });
   }
 }

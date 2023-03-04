@@ -52,7 +52,7 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                     Padding(
                       padding: const EdgeInsets.all(10.0),
                       child: Text(
-                        "Oder ID: ${orderDataMap['orderId'].toString()}",
+                        "Order ID: ${orderDataMap['orderId'].toString()}",
                         style: const TextStyle(
                           color: Colors.grey,
                           fontSize: 16,

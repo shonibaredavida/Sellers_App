@@ -93,7 +93,7 @@ class _ShiftedParcelScreenState extends State<ShiftedParcelScreen> {
             );
           } else {
             if (dev) {
-              printo("o order to display1");
+              printo("No order to display1");
             }
             return const Center(
               child: Text(

@@ -1,3 +1,6 @@
+import 'dart:convert';
+
+import 'package:http/http.dart' as http;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:sellers_app/functions/functions.dart';
@@ -70,4 +73,32 @@ class PushNotifcationsSystem {
     messaging.subscribeToTopic("allSellers");
     messaging.subscribeToTopic("allUsers");
   }
+}
+
+notificationFormat(
+    {String? userDeviceToken,
+    String? orderId,
+    String? notificationBody,
+    String? notificationTitle}) {
+  Map<String, String> hearderNotification = {
+     'Content-Type': 'application/json',
+    'Authorization': fcmServerToken
+  };
+
+  Map bodyNotification = {'body': notificationBody, 'title': notificationTitle};
+  Map dataMap = {
+    'click_action': 'FLUTTER_NOTIFICATION_CLICK',
+    'id': '1',
+    "status": 'done',
+    'orderId': orderId,
+  };
+  Map officialNotificationFormat = {
+    'notification': bodyNotification,
+    'data': dataMap,
+    'priority': 'high',
+    'to': userDeviceToken,
+  };
+  http.post(Uri.parse("https://fcm.googleapis.com/fcm/send"),
+      headers: hearderNotification,
+      body: jsonEncode(officialNotificationFormat));
 }
