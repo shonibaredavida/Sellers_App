@@ -15,6 +15,9 @@ sizedBox({double? height, double? width, Widget? child}) {
   );
 }
 
+String fcmServerToken =
+    'key= AAAA7OeAvQc:APA91bGUDjnyGwuOBNFWczUpYcR0tqhLq9trtxioecRfHHwSMTovlywZaUDaAseMjMdS4Tr3mTQjGFX2gg_vx-ckaBdNIbAuIc8bszwF7daA0ZSBKd7W1fdsgS1KdzkQX3CijOJZPg1T';
+
 bool dev = true;
 printo(message) {
   // ignore: avoid_print
