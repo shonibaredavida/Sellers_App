@@ -1,11 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import "package:flutter/material.dart";
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:sellers_app/Models/brands_model.dart';
 import 'package:sellers_app/brandsScreens/brands_ui_design_widget.dart';
 import 'package:sellers_app/brandsScreens/upload_brands_screen.dart';
+import 'package:sellers_app/functions/functions.dart';
 import 'package:sellers_app/global/global.dart';
 import 'package:sellers_app/push_notification/push_notification_system.dart';
+import 'package:sellers_app/splashScreen/my_splash_screen.dart';
 import 'package:sellers_app/widgets/my_drawer.dart';
 import 'package:sellers_app/widgets/text_delegate_header_widget.dart';
 
@@ -17,6 +20,25 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  restrictBlockedSellers() async {
+    FirebaseFirestore.instance
+        .collection("sellers")
+        .doc(sharedPreferences!.getString("uid"))
+        .get()
+        .then((snapshot) {
+      if (snapshot.data()!['status'] != "approved") {
+        showReusableSnackBar(
+            "Your Account is Blocked.\n Kindly contact Admin (admin@ishop.com )",
+            context);
+        FirebaseAuth.instance.signOut();
+        Navigator.of(context).push(
+            MaterialPageRoute(builder: (context) => const MySplashScreen()));
+      } else {
+        getSellerEarningsFromDB();
+      }
+    });
+  }
+
   getSellerEarningsFromDB() {
     FirebaseFirestore.instance
         .collection("sellers")
@@ -38,7 +60,8 @@ class _HomeScreenState extends State<HomeScreen> {
     pushNotifcationsSystem.whenNotficationIsReceived(context);
     if (dev) printo(" generating Seller token");
     if (dev) printo("getting seller previous earning");
-    getSellerEarningsFromDB();
+    restrictBlockedSellers(); //checking if seller is blocked
+    if (dev) printo("Checking where seller is approved");
   }
 
   @override
